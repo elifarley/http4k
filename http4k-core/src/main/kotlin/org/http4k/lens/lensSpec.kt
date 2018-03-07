@@ -3,6 +3,9 @@ package org.http4k.lens
 import org.http4k.lens.ParamMeta.BooleanParam
 import org.http4k.lens.ParamMeta.IntegerParam
 import org.http4k.lens.ParamMeta.NumberParam
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
@@ -197,9 +200,9 @@ fun <IN> BiDiLensSpec<IN, String>.long() = this.mapWithNewMeta(String::toLong, L
 fun <IN> BiDiLensSpec<IN, String>.double() = this.mapWithNewMeta(String::toDouble, Double::toString, NumberParam)
 fun <IN> BiDiLensSpec<IN, String>.float() = this.mapWithNewMeta(String::toFloat, Float::toString, NumberParam)
 fun <IN> BiDiLensSpec<IN, String>.boolean() = this.mapWithNewMeta(::safeBooleanFrom, Boolean::toString, BooleanParam)
-fun <IN> BiDiLensSpec<IN, String>.localDate(formatter: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE) = this.map(formatter::parse, formatter::format)
-fun <IN> BiDiLensSpec<IN, String>.dateTime(formatter: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME) = this.map(formatter::parse, formatter::format)
-fun <IN> BiDiLensSpec<IN, String>.zonedDateTime(formatter: DateTimeFormatter = DateTimeFormatter.ISO_ZONED_DATE_TIME) = this.map(formatter::parse, formatter::format)
+fun <IN> BiDiLensSpec<IN, String>.localDate(formatter: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE) = this.map({ LocalDate.parse(it, formatter) }, formatter::format)
+fun <IN> BiDiLensSpec<IN, String>.dateTime(formatter: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME) = this.map({ LocalDateTime.parse(it, formatter) }, formatter::format)
+fun <IN> BiDiLensSpec<IN, String>.zonedDateTime(formatter: DateTimeFormatter = DateTimeFormatter.ISO_ZONED_DATE_TIME) = this.map({ ZonedDateTime.parse(it, formatter) }, formatter::format)
 fun <IN> BiDiLensSpec<IN, String>.uuid() = this.map(UUID::fromString, java.util.UUID::toString)
 fun <IN> BiDiLensSpec<IN, String>.regex(pattern: String, group: Int = 1): LensSpec<IN, String> {
     val toRegex = pattern.toRegex()
